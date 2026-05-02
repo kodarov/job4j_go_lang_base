@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"job4j.ru/go-lang-base/internal/base"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	nums := []int{1, 2, 1}
+	res := base.Palindrome(nums)
+	fmt.Println(res)
 }
