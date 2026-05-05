@@ -8,8 +8,18 @@ type ValidateRequest struct {
 
 func Validate(req *ValidateRequest) []string {
 	res := make([]string, 0)
-	if req == nil || req.UserID == "" || req.Title == "" || req.Description == "" {
-		return append(res, "validate error")
+	if req == nil {
+		return append(res, "ValidateRequest nil")
 	}
-	return append(res, "validate message")
+	if req.UserID == "" {
+		res = append(res, "ValidateRequest UserID is empty")
+	}
+	if req.Title == "" {
+		res = append(res, "ValidateRequest Title is empty")
+	}
+	if req.Description == "" {
+		res = append(res, "ValidateRequest Description is empty")
+	}
+
+	return res
 }

@@ -15,7 +15,6 @@ func TestValidate(t *testing.T) {
 		request := base.ValidateRequest{UserID: "testUserID", Title: "testTitle", Description: "testDescription"}
 		actual := base.Validate(&request)
 		expect := make([]string, 0)
-		expect = append(expect, "validate message")
 		assert.Equal(t, expect, actual)
 	})
 
@@ -24,16 +23,66 @@ func TestValidate(t *testing.T) {
 		var cursor *base.ValidateRequest
 		actual := base.Validate(cursor)
 		expect := make([]string, 0)
-		expect = append(expect, "validate error")
+		expect = append(expect, "ValidateRequest nil")
 		assert.Equal(t, expect, actual)
 	})
 
-	t.Run("struct nil validate false", func(t *testing.T) {
+	t.Run("struct fields empty validate false", func(t *testing.T) {
 		t.Parallel()
 		request := base.ValidateRequest{}
 		actual := base.Validate(&request)
-		expect := make([]string, 0)
-		expect = append(expect, "validate error")
+		expect := []string{
+			"ValidateRequest UserID is empty",
+			"ValidateRequest Title is empty",
+			"ValidateRequest Description is empty"}
 		assert.Equal(t, expect, actual)
 	})
+
+	t.Run("Description empty validate false", func(t *testing.T) {
+		t.Parallel()
+		request := base.ValidateRequest{UserID: "testUserID", Title: "testTitle"}
+		actual := base.Validate(&request)
+		expect := []string{
+			"ValidateRequest Description is empty"}
+		assert.Equal(t, expect, actual)
+	})
+
+	t.Run("Title and Description empty validate false", func(t *testing.T) {
+		t.Parallel()
+		request := base.ValidateRequest{UserID: "testUserID"}
+		actual := base.Validate(&request)
+		expect := []string{
+			"ValidateRequest Title is empty",
+			"ValidateRequest Description is empty"}
+		assert.Equal(t, expect, actual)
+	})
+
+	t.Run("Title empty validate false", func(t *testing.T) {
+		t.Parallel()
+		request := base.ValidateRequest{UserID: "testUserID", Description: "testDescription"}
+		actual := base.Validate(&request)
+		expect := []string{
+			"ValidateRequest Title is empty"}
+		assert.Equal(t, expect, actual)
+	})
+
+	t.Run("UserID and Title empty validate false", func(t *testing.T) {
+		t.Parallel()
+		request := base.ValidateRequest{Description: "testDescription"}
+		actual := base.Validate(&request)
+		expect := []string{
+			"ValidateRequest UserID is empty",
+			"ValidateRequest Title is empty"}
+		assert.Equal(t, expect, actual)
+	})
+
+	t.Run("UserID empty validate false", func(t *testing.T) {
+		t.Parallel()
+		request := base.ValidateRequest{Title: "testTitle", Description: "testDescription"}
+		actual := base.Validate(&request)
+		expect := []string{
+			"ValidateRequest UserID is empty"}
+		assert.Equal(t, expect, actual)
+	})
+
 }
