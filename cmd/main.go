@@ -7,20 +7,14 @@ import (
 )
 
 func main() {
-	nums := []int{1, 2, 1}
-	res := base.Palindrome(nums)
+	cache := base.NewLruCache(3)
+
+	cache.Put("hello1", "world1")
+	cache.Put("hello2", "world2")
+	cache.Put("hello3", "world3")
+	cache.Put("hello4", "world4")
+	res := cache.Get("hello1")
+
 	fmt.Println(res)
-
-	var first *base.Node
-
-	if first == nil {
-		fmt.Println("nil pointer is used")
-		first = &base.Node{
-			Key:   "first",
-			Value: "first",
-		}
-	}
-
-	fmt.Printf("Node{key: %s, value: %s}\n", first.Key, first.Value)
 
 }
