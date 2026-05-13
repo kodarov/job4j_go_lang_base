@@ -22,6 +22,10 @@ func (l *LruCache) Put(key string, value string) {
 	if l.size <= 0 {
 		return
 	}
+	if current := l.Get(key); current != nil {
+		*current = value
+		return
+	}
 	newNode := &Node{Key: key, Value: value}
 	if l.Head == nil {
 		l.Head = newNode

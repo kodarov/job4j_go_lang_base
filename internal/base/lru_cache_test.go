@@ -10,6 +10,16 @@ import (
 func TestLruCachePut(t *testing.T) {
 	t.Parallel()
 
+	t.Run("empty list", func(t *testing.T) {
+		t.Parallel()
+		cache := base.NewLruCache(3)
+
+		cache.Put("hello1", "world1")
+
+		assert.Equal(t, "world1", *cache.Get("hello1"))
+		assert.Nil(t, cache.Get("unknown"))
+	})
+
 	t.Run("full", func(t *testing.T) {
 		t.Parallel()
 		cache := base.NewLruCache(3)
@@ -20,6 +30,21 @@ func TestLruCachePut(t *testing.T) {
 		cache.Put("hello4", "world4")
 
 		assert.Equal(t, (*string)(nil), cache.Get("hello1"))
+		assert.Equal(t, "world4", *cache.Get("hello4"))
+	})
+
+	t.Run("full cut tail", func(t *testing.T) {
+		t.Parallel()
+		cache := base.NewLruCache(3)
+
+		cache.Put("hello1", "world1")
+		cache.Put("hello2", "world2")
+		cache.Put("hello3", "world3")
+		cache.Put("hello4", "world4")
+
+		assert.Nil(t, cache.Get("hello1"))
+		assert.Equal(t, "world2", *cache.Get("hello2"))
+		assert.Equal(t, "world3", *cache.Get("hello3"))
 		assert.Equal(t, "world4", *cache.Get("hello4"))
 	})
 
@@ -45,6 +70,29 @@ func TestLruCachePut(t *testing.T) {
 		cache.Put("hello1", "world1")
 
 		assert.Nil(t, cache.Get("hello1"))
+	})
+
+	t.Run("negative size", func(t *testing.T) {
+		t.Parallel()
+		cache := base.NewLruCache(-1)
+
+		cache.Put("hello1", "world1")
+
+		assert.Nil(t, cache.Get("hello1"))
+	})
+
+	t.Run("existing key", func(t *testing.T) {
+		t.Parallel()
+		cache := base.NewLruCache(2)
+
+		cache.Put("hello1", "world1")
+		cache.Put("hello2", "world2")
+		cache.Put("hello1", "updated")
+		cache.Put("hello3", "world3")
+
+		assert.Equal(t, "updated", *cache.Get("hello1"))
+		assert.Nil(t, cache.Get("hello2"))
+		assert.Equal(t, "world3", *cache.Get("hello3"))
 	})
 }
 
