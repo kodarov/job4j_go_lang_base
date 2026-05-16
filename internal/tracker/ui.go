@@ -1,24 +1,21 @@
 package tracker
 
+import "context"
+
 type UI struct {
-	In      Input
-	Out     Output
-	Tracker *Tracker
+	In    Input
+	Out   Output
+	Store Store
 }
 
-func (u UI) Run() {
+func (u UI) Run(ctx context.Context) error {
 	actions := map[string]Usecase{
-		"add":    AddUsecase{},
-		"get":    GetUsecase{},
-		"update": UpdateUsecase{},
-		"delete": DeleteUsecase{},
-		"del":    DeleteUsecase{},
-		"search": SearchUsecase{},
-		"find":   SearchUsecase{},
+		"add": AddUsecase{},
+		"get": GetUsecase{},
 	}
 
 	for {
-		u.Out.Out("select action")
+		u.Out.Out("select action (add, get, exit):")
 		selected := u.In.Get()
 
 		if selected == "exit" {
@@ -31,6 +28,10 @@ func (u UI) Run() {
 			continue
 		}
 
-		action.Done(u.In, u.Out, u.Tracker)
+		if err := action.Done(ctx, u.In, u.Out, u.Store); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }

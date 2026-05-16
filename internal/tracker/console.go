@@ -6,14 +6,6 @@ import (
 	"os"
 )
 
-type Input interface {
-	Get() string
-}
-
-type Output interface {
-	Out(text string)
-}
-
 type ConsoleInput struct{}
 
 func (c ConsoleInput) Get() string {
