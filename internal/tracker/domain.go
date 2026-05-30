@@ -7,6 +7,6 @@ type Item struct {
 	Name string
 }
 
-func (i Item) toString() string {
+func (i Item) ToString() string {
 	return fmt.Sprintf("%s\t%s", i.ID, i.Name)
 }

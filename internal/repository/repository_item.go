@@ -19,6 +19,10 @@ func NewRepoPg(pool *pgxpool.Pool) *RepoPg {
 	return &RepoPg{pool: pool}
 }
 
+func (r *RepoPg) Pool() *pgxpool.Pool {
+	return r.pool
+}
+
 func (r *RepoPg) Create(ctx context.Context, it tracker.Item) error {
 	_, err := r.pool.Exec(
 		ctx,
